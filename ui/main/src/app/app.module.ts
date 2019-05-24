@@ -26,9 +26,9 @@ import {translateConfig} from "./translate.config";
     imports: [
         CommonModule,
         BrowserModule,
+        BrowserAnimationsModule,
         FormsModule,
         ReactiveFormsModule,
-        BrowserAnimationsModule,
         AppRoutingModule,
         HttpClientModule,
         StateModule.forRoot(),
