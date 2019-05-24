@@ -79,6 +79,10 @@ import {XAxisTickFormatPipe} from "../time-line/x-axis-tick-format.pipe";
       ></svg:rect>
       <svg:g *ngFor="let series of dataClustered">
         <svg:g *ngFor="let myCircle of series"
+<<<<<<< HEAD
+=======
+               (click)="test2()"
+>>>>>>> 72d8817... Change ngx-vertical-bar by ngx-custom-charts (Timeline)
                (mouseenter)="feedCircleHovered(myCircle)"
                ngx-tooltip
                [tooltipTemplate]="tooltipTemplate2">
@@ -244,7 +248,6 @@ export class CustomTimelineChartComponent extends BaseChartComponent {
     this.transform2 = `translate(0, ${ this.dims.height + 15})`;
     // this.myData = this.clusterize(this.clusterData);
     console.log('update');
-
     if (this.first) {
       this.first = false;
       this.updateRealTimeDate();
