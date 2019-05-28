@@ -78,8 +78,8 @@ export class InitChartComponent implements OnInit {
 
   setChartData2() {
     this.data$.subscribe(value => {
-      // this.chartData = value.map(d => d);
-      this.setArrayChartData2(value);
+      const chartData = value.map(d => d);
+      this.setArrayChartData2(chartData);
     });
   }
 
@@ -88,8 +88,9 @@ export class InitChartComponent implements OnInit {
    * sort by date
    */
   setArrayChartData2(array: any[]) {
-    array.sort((val1, val2) => { return val1.date - val2.date; });
-
+      array.sort((val1, val2) => {
+        return val1.date - val2.date;
+      });
     const arraySeverity = [];
     this.arrayChartData = [];
 
