@@ -20,6 +20,9 @@ import {CustomTimelineChartComponent} from "../custom-timeline-chart/custom-time
 import {InitChartComponent} from "../init-chart/init-chart.component";
 import {CustomRouterStateSerializer} from "@ofStates/router.state";
 import {NO_ERRORS_SCHEMA} from "@angular/core";
+import * as moment from 'moment';
+import * as _ from 'lodash';
+import {getOneRandomLigthCard} from "@tests/helpers";
 
 describe('TimeLineComponent', () => {
   let component: TimeLineComponent;
@@ -66,6 +69,6 @@ describe('TimeLineComponent', () => {
 
     component.lightCard = lightCard;
     fixture.detectChanges();
-      expect(component).toBeTruthy();
+    expect(component).toBeTruthy();
   });*/
 });
