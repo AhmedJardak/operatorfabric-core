@@ -204,9 +204,9 @@ startProject(){
         echo "${projects[i]} already running (pid: $pid)"
       else
         mkdir -p $projectBuildPath/logs
-       #set -x
+#       set -x
         java $debugOptions -jar $projectBuildPath/libs/$1-$version.jar $applicationOptions 2>&1 > $projectBuildPath/logs/$(date '+%Y-%m-%d').log &
-        #set +x
+#       set +x
         echo $! > $projectBuildPath/PIDFILE
 
         echo "Started with pid: $!"
