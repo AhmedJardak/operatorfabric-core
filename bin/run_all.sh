@@ -18,9 +18,26 @@ gateway=true
 authentication=true
 businessServices=( "users" "time" "cards-consultation" "cards-publication" "thirds")
 offline=false
+isWindows=false;
+
 
 function join_by { local IFS="$1"; shift; echo "$*"; }
 
+test_iswindows(){
+if [ "$(uname)" == "Darwin" ]; then
+    # Do something under Mac OS X platform 
+	isWindows=false;
+elif [ "$(expr substr $(uname -s) 1 5)" == "Linux" ]; then
+    # Do something under GNU/Linux platform
+	isWindows=false;
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW32_NT" ]; then
+    # Do something under 32 bits Windows NT platform
+	isWindows=true;
+elif [ "$(expr substr $(uname -s) 1 10)" == "MINGW64_NT" ]; then
+    # Do something under 64 bits Windows NT platform
+	isWindows=true;
+fi
+}
 test_url() {
     # store the whole response with the status at the and
 #    echo "testing $1"
@@ -134,8 +151,17 @@ PRJ_STRC_FIELDS=4
 
 declare -a projects
 declare -a dependentProjects
+test_iswindows
 i=0
-projects[$i]="configuration-cloud-service"; projects[$i+1]="services/infra/config"; projects[$i+2]=0; projects[$i+3]="--spring.cloud.config.server.native.search-locations=$DIR/../services/infra/config/build/docker-volume/dev-configurations/"; i=$((i+$PRJ_STRC_FIELDS))
+projects[$i]="configuration-cloud-service"; projects[$i+1]="services/infra/config"; projects[$i+2]=0; 
+ if [ "$isWindows" = true ] ; then
+      projects[$i+3]="--spring.cloud.config.server.native.search-locations=$(cygpath -m $DIR/../services/infra/config/build/docker-volume/dev-configurations/)"; 
+	  else
+	  projects[$i+3]="--spring.cloud.config.server.native.search-locations=$DIR/../services/infra/config/build/docker-volume/dev-configurations/"; 
+	  fi
+
+
+i=$((i+$PRJ_STRC_FIELDS))
 #projects[$i]="OAuth2-dev-server"; projects[$i+1]="services/infra/auth"; projects[$i+2]=0; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 projects[$i]="registry-cloud-service"; projects[$i+1]="services/infra/registry"; projects[$i+2]=10; projects[$i+3]=""; i=$((i+$PRJ_STRC_FIELDS))
 i=0
@@ -157,7 +183,11 @@ startProject(){
       echo Starting $1, debug port: $2
       echo "##########################################################"
       projectBuildPath=${OF_HOME}/$3/build
-      bootstrapLocation=${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml
+	  if [ "$isWindows" = true ] ; then
+      bootstrapLocation=$(cygpath -m ${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml)
+	  else
+	  bootstrapLocation=${OF_HOME}/$3/src/main/resources/bootstrap-dev.yml
+	  fi
       debugOptions=-agentlib:jdwp=transport=dt_socket,address=$2,server=y,suspend=n
 
       applicationOptions="--spring.profiles.active=native,dev \
@@ -174,9 +204,9 @@ startProject(){
         echo "${projects[i]} already running (pid: $pid)"
       else
         mkdir -p $projectBuildPath/logs
-#        set -x
+      set -x
         java $debugOptions -jar $projectBuildPath/libs/$1-$version.jar $applicationOptions 2>&1 > $projectBuildPath/logs/$(date '+%Y-%m-%d').log &
-#        set +x
+        set +x
         echo $! > $projectBuildPath/PIDFILE
 
         echo "Started with pid: $!"
