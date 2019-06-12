@@ -17,9 +17,9 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import java.io.*;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
-import java.nio.file.attribute.FileAttribute;
-import java.nio.file.attribute.PosixFilePermission;
-import java.nio.file.attribute.PosixFilePermissions;
+//import java.nio.file.attribute.FileAttribute;
+//import java.nio.file.attribute.PosixFilePermission;
+//import java.nio.file.attribute.PosixFilePermissions;
 import java.util.Set;
 
 /**
@@ -147,7 +147,7 @@ public class PathUtils {
           Path curPath = outPath.resolve(entry.getName());
           createDirIfNeeded(curPath.getParent());
           Files.copy(tis, curPath);
-          Files.setPosixFilePermissions(curPath, PosixFilePermissions.fromString(OPEN_BAR));
+         // Files.setPosixFilePermissions(curPath, PosixFilePermissions.fromString(OPEN_BAR));
         }
       }
     }
@@ -160,8 +160,8 @@ public class PathUtils {
    */
   private static void createDirIfNeeded(Path dir) throws IOException {
     if (!dir.toFile().exists()) {
-      FileAttribute<Set<PosixFilePermission>> attr = openBarPerms();
-      Files.createDirectories(dir, attr);
+     // FileAttribute<Set<PosixFilePermission>> attr = openBarPerms();
+      Files.createDirectories(dir);
     }
   }
 
@@ -169,10 +169,10 @@ public class PathUtils {
    * rwxrwxrwx posix permissions
    * @return rwxrwxrwx posix permissions
    */
-  private static FileAttribute<Set<PosixFilePermission>> openBarPerms() {
+/*  private static FileAttribute<Set<PosixFilePermission>> openBarPerms() {
     Set<PosixFilePermission> perms = PosixFilePermissions.fromString(OPEN_BAR);
     return PosixFilePermissions.asFileAttribute(perms);
-  }
+  }*/
 }
 
 /**
